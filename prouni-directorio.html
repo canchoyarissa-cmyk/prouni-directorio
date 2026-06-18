@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ProUNI · Directorio de Asociados</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --guinda:#6B0F1A;
+    --guinda-dark:#4A0A12;
+    --dorado:#C9A000;
+    --crema:#FAF6EF;
+    --crema-2:#F2EAD8;
+    --texto:#2B2320;
+    --gris:#6E6258;
+    --borde:#E4D9C4;
+    --white:#FFFFFF;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{
+    font-family:'Inter',sans-serif;
+    background:var(--crema);
+    color:var(--texto);
+    line-height:1.5;
+  }
+  h1,h2,h3,h4{font-family:'Playfair Display',serif;}
+  a{text-decoration:none;color:inherit;}
+  button{font-family:'Inter',sans-serif;cursor:pointer;border:none;}
+
+  /* ===== NAV ===== */
+  .navbar{
+    position:fixed;top:0;left:0;right:0;z-index:1000;
+    background:var(--guinda);
+    display:flex;align-items:center;justify-content:space-between;
+    padding:14px 32px;
+    box-shadow:0 2px 10px rgba(0,0,0,0.15);
+  }
+  .nav-logo{display:flex;align-items:center;gap:10px;color:#fff;}
+  .nav-logo svg{width:30px;height:30px;flex-shrink:0;}
+  .nav-logo span{font-family:'Playfair Display',serif;font-weight:700;font-size:1.3rem;letter-spacing:0.5px;}
+  .nav-actions{display:flex;gap:12px;align-items:center;}
+  .btn{
+    padding:10px 20px;border-radius:4px;font-weight:600;font-size:0.9rem;
+    transition:all 0.2s ease;
+  }
+  .btn-outline{
+    background:transparent;border:1.5px solid #fff;color:#fff;
+  }
+  .btn-outline:hover{background:rgba(255,255,255,0.12);}
+  .btn-gold{
+    background:var(--dorado);color:var(--guinda-dark);
+  }
+  .btn-gold:hover{background:#dab21a;}
+
+  /* ===== HERO ===== */
+  .hero{
+    background:var(--guinda);
+    padding:150px 24px 70px;
+    text-align:center;
+    color:#fff;
+  }
+  .hero h1{
+    font-size:2.6rem;font-weight:800;max-width:780px;margin:0 auto 16px;
+  }
+  .hero p{
+    font-size:1.1rem;color:#E9D9D9;max-width:600px;margin:0 auto 40px;
+  }
+  .stats{
+    display:flex;justify-content:center;gap:60px;flex-wrap:wrap;
+  }
+  .stat{text-align:center;}
+  .stat .num{
+    font-family:'Playfair Display',serif;font-size:2.4rem;font-weight:700;color:var(--dorado);
+  }
+  .stat .label{font-size:0.85rem;color:#E9D9D9;letter-spacing:0.5px;text-transform:uppercase;}
+
+  /* ===== TOOLBAR ===== */
+  .toolbar{
+    position:sticky;top:64px;z-index:900;
+    background:#fff;
+    border-bottom:1px solid var(--borde);
+    padding:16px 32px;
+    display:flex;align-items:center;gap:16px;flex-wrap:wrap;
+    box-shadow:0 2px 8px rgba(0,0,0,0.04);
+  }
+  .search-box{
+    flex:1;min-width:220px;position:relative;
+  }
+  .search-box input{
+    width:100%;padding:11px 16px 11px 38px;border:1.5px solid var(--borde);
+    border-radius:6px;font-size:0.95rem;background:var(--crema);
+  }
+  .search-box input:focus{outline:none;border-color:var(--guinda);}
+  .search-box::before{
+    content:"🔍";position:absolute;left:12px;top:50%;transform:translateY(-50%);
+    font-size:0.9rem;opacity:0.6;
+  }
+  .filters{display:flex;gap:8px;flex-wrap:wrap;}
+  .filter-btn{
+    padding:9px 16px;border-radius:20px;border:1.5px solid var(--borde);
+    background:#fff;color:var(--texto);font-size:0.85rem;font-weight:500;
+    transition:all 0.2s;
+  }
+  .filter-btn:hover{border-color:var(--guinda);}
+  .filter-btn.active{
+    background:var(--guinda);color:#fff;border-color:var(--guinda);
+  }
+  .view-toggle{display:flex;gap:4px;background:var(--crema-2);padding:4px;border-radius:6px;}
+  .view-toggle button{
+    padding:7px 12px;border-radius:4px;background:transparent;font-size:0.95rem;
+  }
+  .view-toggle button.active{background:#fff;box-shadow:0 1px 3px rgba(0,0,0,0.15);}
+
+  /* ===== SECTIONS ===== */
+  .container{max-width:1200px;margin:0 auto;padding:50px 24px;}
+  .section-title{
+    display:flex;align-items:center;gap:12px;margin-bottom:24px;
+  }
+  .section-title h2{font-size:1.6rem;color:var(--guinda);}
+  .section-title .count{
+    background:var(--crema-2);color:var(--gris);padding:4px 12px;border-radius:20px;font-size:0.8rem;font-weight:600;
+  }
+
+  .badge-dorado{
+    display:inline-block;background:var(--dorado);color:var(--guinda-dark);
+    font-size:0.7rem;font-weight:700;padding:4px 10px;border-radius:20px;
+    letter-spacing:0.5px;text-transform:uppercase;
+  }
+
+  /* ===== PATROCINADORES ===== */
+  .grid-sponsors{
+    display:grid;grid-template-columns:repeat(2,1fr);gap:28px;
+  }
+  .card-sponsor{
+    background:#fff;border-radius:10px;overflow:hidden;
+    box-shadow:0 4px 18px rgba(107,15,26,0.08);border:1px solid var(--borde);
+    transition:transform 0.2s, box-shadow 0.2s;
+  }
+  .card-sponsor:hover{transform:translateY(-3px);box-shadow:0 8px 24px rgba(107,15,26,0.15);}
+  .card-sponsor .card-header{
+    background:var(--guinda);padding:24px 28px;display:flex;align-items:center;gap:18px;
+  }
+  .logo-circle{
+    width:64px;height:64px;border-radius:50%;background:#fff;
+    display:flex;align-items:center;justify-content:center;font-weight:700;
+    font-size:1.4rem;color:var(--guinda);flex-shrink:0;
+  }
+  .card-header .htext h3{color:#fff;font-size:1.3rem;}
+  .card-header .htext .sector{color:#E9D9D9;font-size:0.85rem;}
+  .card-sponsor .card-body{padding:24px 28px;}
+  .card-sponsor .card-body p{color:var(--gris);margin-bottom:16px;font-size:0.93rem;}
+  .card-meta{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;}
+  .years{font-size:0.8rem;color:var(--gris);}
+  .years b{color:var(--guinda);}
+  .link-web{color:var(--guinda);font-weight:600;font-size:0.85rem;border-bottom:1.5px solid var(--dorado);}
+
+  /* ===== ALIADOS INSTITUCIONALES ===== */
+  .grid-institucional{
+    display:grid;grid-template-columns:repeat(3,1fr);gap:22px;
+  }
+  .card-mid{
+    background:#fff;border-radius:8px;padding:22px;border:1px solid var(--borde);
+    box-shadow:0 2px 10px rgba(0,0,0,0.04);
+  }
+  .card-mid .logo-circle{width:50px;height:50px;font-size:1.1rem;background:var(--crema-2);color:var(--guinda);margin-bottom:14px;}
+  .card-mid h3{font-size:1.05rem;margin-bottom:4px;color:var(--texto);}
+  .card-mid .sector{font-size:0.78rem;color:var(--dorado);font-weight:600;text-transform:uppercase;margin-bottom:10px;}
+  .card-mid p{font-size:0.85rem;color:var(--gris);margin-bottom:12px;}
+  .card-mid .link-web{font-size:0.8rem;}
+
+  /* ===== ALIADOS COMPACTOS (estrategicos/amigos) ===== */
+  .grid-compact{
+    display:grid;grid-template-columns:repeat(4,1fr);gap:16px;
+  }
+  .card-compact{
+    background:#fff;border-radius:8px;padding:18px;text-align:center;
+    border:1px solid var(--borde);transition:box-shadow 0.2s;
+  }
+  .card-compact:hover{box-shadow:0 4px 14px rgba(0,0,0,0.08);}
+  .card-compact .logo-circle{
+    width:44px;height:44px;font-size:0.95rem;margin:0 auto 10px;
+    background:var(--crema-2);color:var(--guinda);
+  }
+  .card-compact h3{font-size:0.92rem;margin-bottom:4px;}
+  .card-compact .sector{font-size:0.72rem;color:var(--gris);}
+
+  /* ===== LIST VIEW ===== */
+  .list-view .grid-sponsors,
+  .list-view .grid-institucional,
+  .list-view .grid-compact{
+    grid-template-columns:1fr;
+  }
+  .list-view .card-sponsor .card-header{flex-direction:row;}
+  .list-view .card-compact{
+    display:flex;align-items:center;gap:14px;text-align:left;
+  }
+  .list-view .card-compact .logo-circle{margin:0;}
+
+  .no-results{
+    text-align:center;padding:50px 20px;color:var(--gris);font-size:1rem;
+    grid-column:1/-1;
+  }
+
+  /* ===== SECCION PRIVADA ===== */
+  .private-section{display:none;}
+  .private-section.show{display:block;}
+  .private-banner{
+    background:var(--crema-2);border:1.5px dashed var(--dorado);
+    border-radius:10px;padding:28px;margin-bottom:18px;
+  }
+  .private-banner .section-title{margin-bottom:18px;}
+  .private-badge{
+    background:var(--guinda);color:#fff;font-size:0.7rem;font-weight:700;
+    padding:5px 12px;border-radius:20px;letter-spacing:0.5px;text-transform:uppercase;
+  }
+  .grid-private{
+    display:grid;grid-template-columns:repeat(3,1fr);gap:18px;
+  }
+  .card-private{
+    background:#fff;border-radius:8px;padding:20px;border-left:4px solid var(--dorado);
+    box-shadow:0 2px 8px rgba(0,0,0,0.05);
+  }
+  .card-private h4{font-size:1rem;color:var(--guinda);margin-bottom:10px;}
+  .card-private .row{font-size:0.85rem;color:var(--gris);margin-bottom:5px;}
+  .card-private .row b{color:var(--texto);}
+
+  /* ===== MODAL LOGIN ===== */
+  .modal-overlay{
+    display:none;position:fixed;inset:0;background:rgba(43,35,32,0.6);
+    z-index:2000;align-items:center;justify-content:center;
+  }
+  .modal-overlay.show{display:flex;}
+  .modal-box{
+    background:#fff;border-radius:10px;width:90%;max-width:380px;
+    padding:36px 32px;position:relative;
+  }
+  .modal-box h2{color:var(--guinda);font-size:1.5rem;margin-bottom:6px;}
+  .modal-box .sub{font-size:0.85rem;color:var(--gris);margin-bottom:26px;}
+  .modal-close{
+    position:absolute;top:16px;right:18px;background:none;font-size:1.3rem;color:var(--gris);
+  }
+  .field{margin-bottom:18px;}
+  .field label{display:block;font-size:0.82rem;font-weight:600;margin-bottom:6px;color:var(--texto);}
+  .field input{
+    width:100%;padding:11px 14px;border:1.5px solid var(--borde);border-radius:6px;
+    font-size:0.92rem;background:var(--crema);
+  }
+  .field input:focus{outline:none;border-color:var(--guinda);}
+  .btn-login{
+    width:100%;background:var(--guinda);color:#fff;padding:13px;border-radius:6px;
+    font-weight:600;font-size:0.95rem;margin-top:8px;
+  }
+  .btn-login:hover{background:var(--guinda-dark);}
+
+  /* ===== FOOTER ===== */
+  footer{
+    background:var(--guinda-dark);color:#E9D9D9;text-align:center;padding:36px 24px;
+  }
+  footer .fname{font-family:'Playfair Display',serif;font-size:1.2rem;color:#fff;margin-bottom:6px;}
+  footer .furl{font-size:0.85rem;color:#C9B7B7;}
+
+  @media(max-width:900px){
+    .grid-sponsors,.grid-institucional,.grid-compact,.grid-private{grid-template-columns:repeat(2,1fr);}
+  }
+  @media(max-width:600px){
+    .grid-sponsors,.grid-institucional,.grid-compact,.grid-private{grid-template-columns:1fr;}
+    .navbar{padding:12px 16px;}
+    .nav-logo span{display:none;}
+    .hero{padding:130px 16px 50px;}
+    .hero h1{font-size:1.9rem;}
+    .toolbar{top:60px;padding:14px 16px;}
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="navbar">
+  <div class="nav-logo">
+    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M12 2L2 7l10 5 10-5-10-5z" fill="#fff"/>
+      <path d="M2 7v10l10 5 10-5V7" stroke="#fff" stroke-width="1.5" fill="none"/>
+      <path d="M12 12v10" stroke="#fff" stroke-width="1.5"/>
+    </svg>
+    <span>ProUNI</span>
+  </div>
+  <div class="nav-actions">
+    <button class="btn btn-outline" id="btnLogin" onclick="openModal()">Iniciar sesión</button>
+    <button class="btn btn-gold">Ser asociado</button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<header class="hero">
+  <h1>Directorio de Asociados ProUNI</h1>
+  <p>Patronato de la Universidad Nacional de Ingeniería — Conectando a las empresas e instituciones que impulsan el desarrollo de la educación de ingeniería en el Perú.</p>
+  <div class="stats">
+    <div class="stat"><div class="num">12</div><div class="label">Asociados activos</div></div>
+    <div class="stat"><div class="num">7</div><div class="label">Aliados estratégicos</div></div>
+    <div class="stat"><div class="num">2</div><div class="label">Patrocinadores</div></div>
+  </div>
+</header>
+
+<!-- TOOLBAR -->
+<div class="toolbar">
+  <div class="search-box">
+    <input type="text" id="searchInput" placeholder="Buscar por nombre o sector..." oninput="filterCards()">
+  </div>
+  <div class="filters" id="categoryFilters">
+    <button class="filter-btn active" data-cat="todos">Todos</button>
+    <button class="filter-btn" data-cat="patrocinadores">Patrocinadores</button>
+    <button class="filter-btn" data-cat="institucionales">Aliados Institucionales</button>
+    <button class="filter-btn" data-cat="estrategicos">Aliados Estratégicos</button>
+    <button class="filter-btn" data-cat="amigos">Aliados Amigos</button>
+  </div>
+  <div class="view-toggle">
+    <button id="gridBtn" class="active" onclick="setView('grid')" title="Vista grilla">▦</button>
+    <button id="listBtn" onclick="setView('list')" title="Vista lista">☰</button>
+  </div>
+</div>
+
+<main class="container" id="mainContainer">
+
+  <!-- SECCION PRIVADA -->
+  <section class="private-section" id="privateSection">
+    <div class="private-banner">
+      <div class="section-title">
+        <h2>Contactos Privados</h2>
+        <span class="private-badge">Solo asociados</span>
+      </div>
+      <div class="grid-private">
+        <div class="card-private">
+          <h4>Minera Cerro Andino S.A.</h4>
+          <div class="row"><b>Representante:</b> Jorge Huamán Ríos</div>
+          <div class="row"><b>Cargo:</b> Gerente de Relaciones Institucionales</div>
+          <div class="row"><b>Correo:</b> j.huaman@cerroandino.pe</div>
+          <div class="row"><b>Teléfono:</b> +51 1 442 3190</div>
+        </div>
+        <div class="card-private">
+          <h4>Constructora Vértice Perú</h4>
+          <div class="row"><b>Representante:</b> Lucía Fernández Soto</div>
+          <div class="row"><b>Cargo:</b> Directora de Alianzas</div>
+          <div class="row"><b>Correo:</b> l.fernandez@verticeperu.com</div>
+          <div class="row"><b>Teléfono:</b> +51 1 715 6620</div>
+        </div>
+        <div class="card-private">
+          <h4>EnerSur Andina</h4>
+          <div class="row"><b>Representante:</b> Carlos Medina Paz</div>
+          <div class="row"><b>Cargo:</b> Jefe de Sostenibilidad</div>
+          <div class="row"><b>Correo:</b> c.medina@enersurandina.pe</div>
+          <div class="row"><b>Teléfono:</b> +51 1 630 4471</div>
+        </div>
+        <div class="card-private">
+          <h4>AgroFértil del Norte</h4>
+          <div class="row"><b>Representante:</b> Rosa Gálvez Tirado</div>
+          <div class="row"><b>Cargo:</b> Coordinadora de Convenios</div>
+          <div class="row"><b>Correo:</b> r.galvez@agrofertilnorte.pe</div>
+          <div class="row"><b>Teléfono:</b> +51 44 282 117</div>
+        </div>
+        <div class="card-private">
+          <h4>TechAndes Soluciones Digitales</h4>
+          <div class="row"><b>Representante:</b> Renato Vega Quispe</div>
+          <div class="row"><b>Cargo:</b> CEO</div>
+          <div class="row"><b>Correo:</b> renato.vega@techandes.pe</div>
+          <div class="row"><b>Teléfono:</b> +51 1 271 9034</div>
+        </div>
+        <div class="card-private">
+          <h4>Ingeniería &amp; Minas SAC</h4>
+          <div class="row"><b>Representante:</b> Patricia Loayza Cruz</div>
+          <div class="row"><b>Cargo:</b> Gerente General</div>
+          <div class="row"><b>Correo:</b> p.loayza@ingmines.pe</div>
+          <div class="row"><b>Teléfono:</b> +51 1 503 8821</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PATROCINADORES -->
+  <section class="cat-section" data-cat="patrocinadores">
+    <div class="section-title">
+      <h2>Patrocinadores</h2>
+      <span class="count">2</span>
+    </div>
+    <div class="grid-sponsors">
+      <div class="card-sponsor" data-name="minera cerro andino s.a." data-sector="minería">
+        <div class="card-header">
+          <div class="logo-circle">MCA</div>
+          <div class="htext">
+            <h3>Minera Cerro Andino S.A.</h3>
+            <div class="sector">Minería</div>
+          </div>
+        </div>
+        <div class="card-body">
+          <span class="badge-dorado">Patrocinador</span>
+          <p style="margin-top:14px;">Una de las principales empresas mineras del país, comprometida con la formación de ingenieros de excelencia. Financia laboratorios de geología y becas de investigación en la UNI desde hace más de una década.</p>
+          <div class="card-meta">
+            <span class="years">Asociado desde hace <b>11 años</b></span>
+            <a class="link-web" href="#" target="_blank">Visitar sitio web →</a>
+          </div>
+        </div>
+      </div>
+      <div class="card-sponsor" data-name="constructora vértice perú" data-sector="construcción">
+        <div class="card-header">
+          <div class="logo-circle">CVP</div>
+          <div class="htext">
+            <h3>Constructora Vértice Perú</h3>
+            <div class="sector">Construcción</div>
+          </div>
+        </div>
+        <div class="card-body">
+          <span class="badge-dorado">Patrocinador</span>
+          <p style="margin-top:14px;">Empresa líder en infraestructura vial y edificaciones, aliada estratégica del Patronato UNI en la implementación de talleres de práctica profesional y convenios de pasantía para egresados de ingeniería civil.</p>
+          <div class="card-meta">
+            <span class="years">Asociado desde hace <b>8 años</b></span>
+            <a class="link-web" href="#" target="_blank">Visitar sitio web →</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ALIADOS INSTITUCIONALES -->
+  <section class="cat-section" data-cat="institucionales">
+    <div class="section-title">
+      <h2>Aliados Institucionales</h2>
+      <span class="count">3</span>
+    </div>
+    <div class="grid-institucional">
+      <div class="card-mid" data-name="enersur andina" data-sector="energía">
+        <div class="logo-circle">ESA</div>
+        <h3>EnerSur Andina</h3>
+        <div class="sector">Energía</div>
+        <p>Generadora eléctrica que apoya proyectos de energías renovables junto a la facultad de ingeniería mecánica.</p>
+        <a class="link-web" href="#" target="_blank">Visitar sitio web →</a>
+      </div>
+      <div class="card-mid" data-name="agrofértil del norte" data-sector="agroindustria">
+        <div class="logo-circle">AFN</div>
+        <h3>AgroFértil del Norte</h3>
+        <div class="sector">Agroindustria</div>
+        <p>Productora agroindustrial que colabora con becas para estudiantes de ingeniería agrícola y ambiental.</p>
+        <a class="link-web" href="#" target="_blank">Visitar sitio web →</a>
+      </div>
+      <div class="card-mid" data-name="techandes soluciones digitales" data-sector="tecnología">
+        <div class="logo-circle">TSD</div>
+        <h3>TechAndes Soluciones Digitales</h3>
+        <div class="sector">Tecnología</div>
+        <p>Empresa de software que ofrece pasantías y hackathons junto a la facultad de ingeniería de sistemas.</p>
+        <a class="link-web" href="#" target="_blank">Visitar sitio web →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ALIADOS ESTRATEGICOS -->
+  <section class="cat-section" data-cat="estrategicos">
+    <div class="section-title">
+      <h2>Aliados Estratégicos</h2>
+      <span class="count">4</span>
+    </div>
+    <div class="grid-compact">
+      <div class="card-compact" data-name="ingeniería &amp; minas sac" data-sector="minería">
+        <div class="logo-circle">IMS</div>
+        <h3>Ingeniería &amp; Minas SAC</h3>
+        <div class="sector">Minería</div>
+      </div>
+      <div class="card-compact" data-name="grupo electroandino" data-sector="energía">
+        <div class="logo-circle">GEA</div>
+        <h3>Grupo Electroandino</h3>
+        <div class="sector">Energía</div>
+      </div>
+      <div class="card-compact" data-name="constructora san martín" data-sector="construcción">
+        <div class="logo-circle">CSM</div>
+        <h3>Constructora San Martín</h3>
+        <div class="sector">Construcción</div>
+      </div>
+      <div class="card-compact" data-name="datacore perú" data-sector="tecnología">
+        <div class="logo-circle">DCP</div>
+        <h3>DataCore Perú</h3>
+        <div class="sector">Tecnología</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ALIADOS AMIGOS -->
+  <section class="cat-section" data-cat="amigos">
+    <div class="section-title">
+      <h2>Aliados Amigos</h2>
+      <span class="count">3</span>
+    </div>
+    <div class="grid-compact">
+      <div class="card-compact" data-name="agroexport del valle" data-sector="agroindustria">
+        <div class="logo-circle">AEV</div>
+        <h3>Agroexport del Valle</h3>
+        <div class="sector">Agroindustria</div>
+      </div>
+      <div class="card-compact" data-name="hidroandes ingeniería" data-sector="energía">
+        <div class="logo-circle">HAI</div>
+        <h3>HidroAndes Ingeniería</h3>
+        <div class="sector">Energía</div>
+      </div>
+      <div class="card-compact" data-name="codigo sur software" data-sector="tecnología">
+        <div class="logo-circle">CSS</div>
+        <h3>Código Sur Software</h3>
+        <div class="sector">Tecnología</div>
+      </div>
+    </div>
+  </section>
+
+  <p class="no-results" id="noResults" style="display:none;">No se encontraron empresas</p>
+</main>
+
+<!-- MODAL LOGIN -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <h2>Iniciar sesión</h2>
+    <div class="sub">Acceso exclusivo para asociados ProUNI</div>
+    <div class="field">
+      <label>Correo electrónico</label>
+      <input type="email" placeholder="correo@empresa.com" id="loginEmail">
+    </div>
+    <div class="field">
+      <label>Contraseña</label>
+      <input type="password" placeholder="••••••••" id="loginPass">
+    </div>
+    <button class="btn-login" onclick="doLogin()">Ingresar</button>
+  </div>
+</div>
+
+<footer>
+  <div class="fname">ProUNI — Patronato de la Universidad Nacional de Ingeniería</div>
+  <div class="furl">www.proUNI.org.pe</div>
+</footer>
+
+<script>
+  function openModal(){
+    if(document.getElementById('btnLogin').textContent.trim() === 'Mi cuenta') return;
+    document.getElementById('modalOverlay').classList.add('show');
+  }
+  function closeModal(){
+    document.getElementById('modalOverlay').classList.remove('show');
+  }
+  function doLogin(){
+    document.getElementById('privateSection').classList.add('show');
+    document.getElementById('btnLogin').textContent = 'Mi cuenta';
+    closeModal();
+    document.getElementById('privateSection').scrollIntoView({behavior:'smooth'});
+  }
+
+  // Filtro por categoría
+  const filterBtns = document.querySelectorAll('.filter-btn');
+  let activeCat = 'todos';
+  filterBtns.forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      filterBtns.forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      activeCat = btn.dataset.cat;
+      applyCategoryFilter();
+      filterCards();
+    });
+  });
+  function applyCategoryFilter(){
+    document.querySelectorAll('.cat-section').forEach(sec=>{
+      if(activeCat === 'todos' || sec.dataset.cat === activeCat){
+        sec.style.display = '';
+      } else {
+        sec.style.display = 'none';
+      }
+    });
+  }
+
+  // Buscador en tiempo real
+  function filterCards(){
+    const term = document.getElementById('searchInput').value.trim().toLowerCase();
+    let anyVisible = false;
+    document.querySelectorAll('.cat-section').forEach(sec=>{
+      if(sec.style.display === 'none') return;
+      const cards = sec.querySelectorAll('[data-name]');
+      let sectionHasVisible = false;
+      cards.forEach(card=>{
+        const name = card.dataset.name || '';
+        const sector = card.dataset.sector || '';
+        const match = name.includes(term) || sector.includes(term);
+        card.style.display = match ? '' : 'none';
+        if(match) sectionHasVisible = true;
+      });
+      if(sectionHasVisible) anyVisible = true;
+    });
+    document.getElementById('noResults').style.display = anyVisible ? 'none' : 'block';
+  }
+
+  // Toggle vista grilla/lista
+  function setView(mode){
+    const container = document.getElementById('mainContainer');
+    const gridBtn = document.getElementById('gridBtn');
+    const listBtn = document.getElementById('listBtn');
+    if(mode === 'list'){
+      container.classList.add('list-view');
+      listBtn.classList.add('active');
+      gridBtn.classList.remove('active');
+    } else {
+      container.classList.remove('list-view');
+      gridBtn.classList.add('active');
+      listBtn.classList.remove('active');
+    }
+  }
+</script>
+
+</body>
+</html>
