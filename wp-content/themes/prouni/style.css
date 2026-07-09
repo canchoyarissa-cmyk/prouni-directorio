@@ -1,0 +1,18 @@
+/*
+Theme Name: ProUNI - Directorio Institucional
+Theme URI: https://prouni.org.pe
+Author: ProUNI
+Author URI: https://prouni.org.pe
+Description: Tema nativo de WordPress para el Patronato de la Universidad Nacional de Ingeniería (ProUNI). Incluye la plantilla del Directorio Institucional (asociados y aliados) con filtros por categoría, compatible con Elementor.
+Version: 1.0.0
+Requires at least: 6.0
+Requires PHP: 7.4
+Tested up to: 6.6
+Text Domain: prouni
+Tags: custom-menu, featured-images, translation-ready
+
+Este archivo solo contiene la cabecera obligatoria que exige WordPress
+para reconocer el tema. Todos los estilos visuales del sitio viven en
+assets/css/directorio.css y se cargan desde functions.php mediante
+wp_enqueue_style(), siguiendo las buenas prácticas de desarrollo de temas.
+*/
