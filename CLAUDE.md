@@ -1,20 +1,49 @@
 # prouni-directorio
 
 Sitio institucional de ProUNI (Patronato de la Universidad Nacional de
-Ingeniería del Perú), implementado como tema nativo de WordPress en
-`wp-content/themes/prouni/`.
+Ingeniería del Perú).
+
+## ⚠️ Decisión vigente: NO tema propio — el sitio usa GeneratePress Child
+
+El sitio real del cliente ya tiene un tema activo: **GeneratePress Child**.
+El cliente decidió **no reemplazarlo**, así que el enfoque de
+`wp-content/themes/prouni/` (tema WordPress completo, construido en una
+etapa anterior de este proyecto) quedó **abandonado** — no se sigue
+desarrollando y no debe presentarse como la solución a instalar. Esos
+archivos se dejan en el repo solo como referencia/histórico; no se
+eliminan sin instrucción explícita del cliente.
+
+El Directorio Institucional se entrega en cambio como un **plugin
+independiente** en `wp-content/plugins/prouni-directorio/`, con el
+shortcode `[prouni_directorio]`. El cliente lo instala vía
+Plugins → Añadir nueva → Subir plugin → Activar, crea su propia página
+"Directorio" en GeneratePress/Elementor, y pega el shortcode dentro del
+contenido (widget "Shortcode" de Elementor Free o bloque de shortcode
+de Gutenberg). El header y footer los sigue manejando GeneratePress; el
+plugin no los toca.
+
+Reglas para cualquier componente nuevo que se agregue de aquí en
+adelante, salvo que el cliente pida explícitamente volver a un tema
+completo:
+- Vive en `wp-content/plugins/<nombre>/`, nunca en `wp-content/themes/`.
+- No crea ni modifica `header.php`, `footer.php`, `functions.php`,
+  `style.css` de tema, `page.php`, `single.php` ni `index.php`.
+- Todo su CSS va anidado bajo una clase contenedora propia (como
+  `.prouni-directorio`) para no filtrarse al resto del sitio.
+- Se expone como shortcode (o bloque de Gutenberg si se pide), nunca
+  como plantilla de página que reemplace header/footer.
 
 ## Regla de fidelidad al diseño original (obligatoria)
 
 El HTML renderizado debe mantenerse **lo más idéntico posible** al
-prototipo HTML/CSS/JS original que dio origen al tema. Al modificar o
-extender este tema:
+prototipo HTML/CSS/JS original que dio origen a este componente. Al
+modificar o extenderlo:
 
 - No cambies clases CSS, estructura del DOM, jerarquía de elementos,
   espaciados ni breakpoints salvo que sea **estrictamente necesario**
-  para que funcione en WordPress (por ejemplo: dividir en
-  header.php/footer.php, encolar assets, o convertir contenido fijo en
-  contenido editable vía CPT/campos).
+  para que funcione como shortcode dentro de GeneratePress/Elementor
+  (por ejemplo: anidar el CSS bajo `.prouni-directorio`, encolar
+  assets, o envolver el contenido en el shortcode).
 - No cambies textos, iconos, glifos ni comportamiento visual existente
   sin necesidad técnica real.
 - Si detectas una oportunidad de mejora (funcionalidad, UX, SEO,
@@ -33,13 +62,13 @@ Paleta institucional oficial (confirmada por el cliente):
 - Dorado: `#C9A84C`
 - Blanco de fondo: `#F9F8F6`
 
-**Estado actual:** el tema en `wp-content/themes/prouni/` (plantilla del
-Directorio) todavía usa los colores del prototipo HTML original
-(`--guinda:#8f0010`, `--dorado:#e0aa00`, `--blanco:#fff` en
-`assets/css/directorio.css`), y **así debe permanecer por ahora** — la
-prioridad actual es la fidelidad 1:1 con ese HTML. **No reemplaces estos
-valores todavía**, ni en el directorio ni copiando la paleta antigua a
-páginas nuevas.
+**Estado actual:** el componente en
+`wp-content/plugins/prouni-directorio/directorio.css` todavía usa los
+colores del prototipo HTML original (`--guinda:#8f0010`,
+`--dorado:#e0aa00`, `--blanco:#fff`), y **así debe permanecer por
+ahora** — la prioridad actual es la fidelidad 1:1 con ese HTML. **No
+reemplaces estos valores todavía**, ni en el directorio ni copiando la
+paleta antigua a páginas nuevas.
 
 Esta paleta oficial es la que se debe usar en:
 - Cualquier página o componente **nuevo** que se construya de aquí en
@@ -53,7 +82,11 @@ Esta paleta oficial es la que se debe usar en:
 
 ## Estructura
 
-- `wp-content/themes/prouni/` — tema activo.
+- `wp-content/plugins/prouni-directorio/` — componente activo (shortcode
+  `[prouni_directorio]`): `directorio.php` + `directorio.css` +
+  `directorio.js`.
+- `wp-content/themes/prouni/` — tema completo de una etapa anterior,
+  **abandonado** (ver decisión arriba). No desarrollar sobre esto salvo
+  instrucción explícita.
 - `prouni-directorio.html` (raíz del repo) — prototipo/experimento
-  anterior no relacionado con el tema actual; no forma parte de la
-  implementación en curso.
+  anterior no relacionado con la implementación actual.

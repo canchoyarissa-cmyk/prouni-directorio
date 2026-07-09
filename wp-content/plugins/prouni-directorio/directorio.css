@@ -1,0 +1,286 @@
+/*
+ * ProUNI - Directorio Institucional (componente)
+ * Migrado 1:1 desde el prototipo HTML original (directorio_prouni_v2_filtros.html).
+ *
+ * Todas las reglas están anidadas bajo ".prouni-directorio" a propósito:
+ * este componente se inserta dentro del contenido de una página que ya
+ * usa GeneratePress Child (header/footer/tipografía global propios), así
+ * que nada de aquí debe "escaparse" y afectar al resto del sitio. Los
+ * valores de diseño (colores, tipografía, espaciados, grid, breakpoints)
+ * son exactamente los del HTML original, solo se cambió el alcance/scope
+ * de los selectores.
+ */
+
+.prouni-directorio,
+.prouni-directorio *{
+  box-sizing:border-box;
+}
+
+.prouni-directorio{
+  --guinda:#8f0010;
+  --guinda-dark:#660000;
+  --guinda-soft:#b20b1a;
+  --dorado:#e0aa00;
+  --gris:#8f8f8f;
+  --gris-claro:#f7f7f7;
+  --borde:#e3e3e3;
+  --texto:#171717;
+  --blanco:#fff;
+
+  font-family:'Roboto',sans-serif;
+  color:var(--texto);
+}
+
+/* HERO */
+.prouni-directorio .hero{
+  min-height:235px;
+  background:
+    linear-gradient(90deg,rgba(95,0,0,.96) 0%,rgba(95,0,0,.86) 45%,rgba(95,0,0,.72) 100%),
+    url('https://images.unsplash.com/photo-1523580846011-d3a5bc25702b?auto=format&fit=crop&w=1800&q=80');
+  background-size:cover;
+  background-position:center;
+  display:flex;
+  align-items:center;
+}
+
+.prouni-directorio .hero-inner{
+  width:min(1400px,86%);
+  margin:0 auto;
+  color:#fff;
+}
+
+.prouni-directorio .hero h1{
+  font-family:'Roboto Serif',serif;
+  font-size:44px;
+  line-height:1.05;
+  margin:0 0 18px;
+  font-weight:700;
+}
+
+.prouni-directorio .hero p{
+  font-size:17px;
+  line-height:1.55;
+  max-width:640px;
+  margin:0;
+}
+
+.prouni-directorio .gold-line{
+  width:48px;
+  height:3px;
+  background:var(--dorado);
+  margin-top:22px;
+}
+
+/* CONTENT */
+.prouni-directorio .directory{
+  width:min(1400px,86%);
+  margin:0 auto;
+  padding:28px 0 70px;
+}
+
+.prouni-directorio .switch-tabs{
+  width:460px;
+  max-width:100%;
+  margin:0 auto 28px;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  border:1px solid #d7d7d7;
+  border-radius:999px;
+  overflow:hidden;
+  background:#fff;
+}
+
+.prouni-directorio .switch-tabs button{
+  border:0;
+  background:#fff;
+  padding:14px 20px;
+  font-family:'Roboto Serif',serif;
+  font-size:17px;
+  cursor:pointer;
+  color:#555;
+}
+
+.prouni-directorio .switch-tabs button.active{
+  background:var(--guinda);
+  color:#fff;
+  font-weight:700;
+  border-radius:999px;
+}
+
+.prouni-directorio .controls{
+  display:grid;
+  grid-template-columns:1fr 330px;
+  gap:36px;
+  align-items:center;
+  margin:34px 0;
+}
+
+.prouni-directorio .chips{display:flex;gap:12px;flex-wrap:wrap}
+.prouni-directorio .chip{
+  border:1px solid #d7d7d7;
+  background:#fff;
+  color:var(--guinda);
+  padding:13px 26px;
+  border-radius:5px;
+  font-size:13px;
+  font-weight:800;
+  cursor:pointer;
+  transition:.2s ease;
+  text-transform:uppercase;
+}
+.prouni-directorio .chip.active,
+.prouni-directorio .chip:hover{background:var(--guinda);color:#fff;border-color:var(--guinda)}
+
+.prouni-directorio .search-box{
+  height:46px;
+  border:1px solid #d9d9d9;
+  border-radius:5px;
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:0 16px;
+  color:#777;
+}
+.prouni-directorio .search-box input{border:0;outline:0;width:100%;font-size:14px;background:transparent}
+
+.prouni-directorio .section-title{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin:30px 0 16px;
+}
+
+.prouni-directorio .title-left{display:flex;align-items:center;gap:14px}
+.prouni-directorio .icon-line{font-size:25px;color:var(--guinda)}
+.prouni-directorio .section-title h2{
+  font-family:'Roboto Serif',serif;
+  color:var(--guinda-dark);
+  font-size:25px;
+  margin:0;
+}
+.prouni-directorio .highlight-note{color:#bc7a00;font-size:14px;margin-left:10px}
+.prouni-directorio .view-all{color:var(--guinda);font-size:14px;text-decoration:none;font-weight:500}
+
+.prouni-directorio .premium-grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:30px;
+}
+
+.prouni-directorio .premium-card{
+  min-height:152px;
+  border:1px solid var(--dorado);
+  border-top:4px solid var(--guinda);
+  border-radius:5px;
+  display:grid;
+  grid-template-columns:125px 1fr 185px;
+  gap:22px;
+  align-items:center;
+  padding:22px 28px;
+  background:#fff;
+  transition:.25s ease;
+}
+
+.prouni-directorio .premium-card:hover,
+.prouni-directorio .member-card:hover{
+  transform:translateY(-3px);
+  box-shadow:0 16px 34px rgba(0,0,0,.09);
+}
+
+.prouni-directorio .avatar{
+  width:92px;
+  height:92px;
+  border-radius:50%;
+  background:linear-gradient(135deg,#ddd,#f5f5f5);
+  overflow:hidden;
+}
+.prouni-directorio .avatar img{width:100%;height:100%;object-fit:cover}
+
+.prouni-directorio .premium-card h3,
+.prouni-directorio .member-card h3{
+  font-family:'Roboto Serif',serif;
+  font-size:18px;
+  margin:0 0 9px;
+  color:#111;
+}
+.prouni-directorio .premium-card p,
+.prouni-directorio .member-card p{margin:0 0 6px;font-size:14px;line-height:1.35}
+.prouni-directorio .year{color:var(--guinda);font-weight:900;margin-top:3px}
+.prouni-directorio .small-meta{font-size:13px;color:#555;margin-top:12px}
+
+.prouni-directorio .company-logo{
+  border-left:1px solid #e7d6c8;
+  min-height:92px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:#555;
+  font-size:34px;
+  font-weight:700;
+  letter-spacing:-1px;
+  overflow:hidden;
+}
+.prouni-directorio .company-logo img{max-width:100%;max-height:80px;object-fit:contain}
+.prouni-directorio .company-logo span{color:var(--guinda);font-weight:900}
+
+.prouni-directorio .standard-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:18px;
+}
+.prouni-directorio .member-card{
+  border:1px solid #ddd;
+  border-radius:5px;
+  padding:18px;
+  display:grid;
+  grid-template-columns:74px 1fr;
+  gap:16px;
+  align-items:center;
+  min-height:112px;
+  background:#fff;
+  transition:.25s ease;
+}
+.prouni-directorio .member-card .avatar{width:64px;height:64px}
+.prouni-directorio .member-card p{font-size:13px;color:#333}
+
+.prouni-directorio .simple-row{
+  border-bottom:1px solid #e6e6e6;
+  padding:20px 0;
+}
+
+.prouni-directorio .tab-panel{display:none}
+.prouni-directorio .tab-panel.active{display:block}
+
+.prouni-directorio .no-results-msg{
+  padding:40px 0;
+  text-align:center;
+  color:#777;
+  font-size:14px;
+  display:none;
+}
+.prouni-directorio .no-results-msg.visible{display:block}
+
+/* Utilidad estándar de WordPress: oculta visualmente un texto mientras
+   lo deja disponible para lectores de pantalla. No afecta el diseño. */
+.prouni-directorio .screen-reader-text{
+  border:0;
+  clip:rect(1px,1px,1px,1px);
+  clip-path:inset(50%);
+  height:1px;
+  width:1px;
+  margin:-1px;
+  overflow:hidden;
+  padding:0;
+  position:absolute !important;
+  word-wrap:normal !important;
+}
+
+@media(max-width:900px){
+  .prouni-directorio .controls{grid-template-columns:1fr}
+  .prouni-directorio .premium-grid,
+  .prouni-directorio .standard-grid{grid-template-columns:1fr}
+  .prouni-directorio .premium-card{grid-template-columns:90px 1fr}
+  .prouni-directorio .company-logo{display:none}
+  .prouni-directorio .directory,
+  .prouni-directorio .hero-inner{width:90%}
+}
