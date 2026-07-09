@@ -16,8 +16,21 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 /**
  * Añade el metabox solo cuando la página usa la plantilla del directorio.
+ * Se filtra aquí mismo (no dentro del callback de render) para no dejar
+ * una caja vacía en todas las demás páginas del sitio.
+ *
+ * @param string  $post_type Post type de la pantalla de edición actual.
+ * @param WP_Post $post      Página actual (puede no existir aún al crear una nueva).
  */
-function prouni_add_metabox_hero() {
+function prouni_add_metabox_hero( $post_type, $post ) {
+	if ( 'page' !== $post_type || ! ( $post instanceof WP_Post ) ) {
+		return;
+	}
+
+	if ( 'page-directorio.php' !== get_page_template_slug( $post->ID ) ) {
+		return;
+	}
+
 	add_meta_box(
 		'prouni_hero_datos',
 		__( 'Directorio: texto del Hero', 'prouni' ),
@@ -27,18 +40,14 @@ function prouni_add_metabox_hero() {
 		'high'
 	);
 }
-add_action( 'add_meta_boxes', 'prouni_add_metabox_hero' );
+add_action( 'add_meta_boxes', 'prouni_add_metabox_hero', 10, 2 );
 
 /**
- * Pinta el campo, solo visible si la plantilla activa es la del directorio.
+ * Pinta el campo del subtítulo del Hero.
  *
  * @param WP_Post $post Página actual.
  */
 function prouni_render_metabox_hero( $post ) {
-	if ( 'page-directorio.php' !== get_page_template_slug( $post->ID ) ) {
-		return;
-	}
-
 	wp_nonce_field( 'prouni_guardar_hero', 'prouni_hero_nonce' );
 	$subtitulo = get_post_meta( $post->ID, '_prouni_hero_subtitulo', true );
 	?>

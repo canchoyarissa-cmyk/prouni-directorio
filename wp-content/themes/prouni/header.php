@@ -24,7 +24,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 <div class="top-bar">
 	<a href="mailto:<?php echo esc_attr( get_theme_mod( 'prouni_top_bar_email', 'contacto@prouni.org.pe' ) ); ?>">
-		<?php esc_html_e( 'Correo', 'prouni' ); ?> <span class="mail-icon">✉</span>
+		<?php esc_html_e( 'Correo', 'prouni' ); ?> <span class="mail-icon" aria-hidden="true">✉</span>
 	</a>
 </div>
 
@@ -60,7 +60,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	?>
 
 	<form class="header-search" role="search" method="get" action="<?php echo esc_url( home_url( '/' ) ); ?>">
-		⌕
-		<input type="search" name="s" placeholder="<?php esc_attr_e( 'Buscar...', 'prouni' ); ?>" value="<?php echo esc_attr( get_search_query() ); ?>" />
+		<span aria-hidden="true">⌕</span>
+		<label class="screen-reader-text" for="header-search-input"><?php esc_html_e( 'Buscar en el sitio', 'prouni' ); ?></label>
+		<input type="search" id="header-search-input" name="s" placeholder="<?php esc_attr_e( 'Buscar...', 'prouni' ); ?>" value="<?php echo esc_attr( get_search_query() ); ?>" />
 	</form>
 </header>

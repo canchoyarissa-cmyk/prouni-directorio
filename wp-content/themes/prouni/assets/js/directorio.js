@@ -24,11 +24,13 @@
 			btn.addEventListener( 'click', function () {
 				tabButtons.forEach( function ( b ) {
 					b.classList.remove( 'active' );
+					b.setAttribute( 'aria-selected', 'false' );
 				} );
 				panels.forEach( function ( p ) {
 					p.classList.remove( 'active' );
 				} );
 				btn.classList.add( 'active' );
+				btn.setAttribute( 'aria-selected', 'true' );
 				var target = document.getElementById( btn.dataset.tab );
 				if ( target ) {
 					target.classList.add( 'active' );
@@ -45,8 +47,10 @@
 				var group = chip.parentElement;
 				group.querySelectorAll( '.chip' ).forEach( function ( c ) {
 					c.classList.remove( 'active' );
+					c.setAttribute( 'aria-pressed', 'false' );
 				} );
 				chip.classList.add( 'active' );
+				chip.setAttribute( 'aria-pressed', 'true' );
 
 				var filter = chip.dataset.filter;
 				var panel = chip.closest( '.tab-panel' );

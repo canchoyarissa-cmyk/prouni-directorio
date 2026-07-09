@@ -11,6 +11,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+// Ancho de referencia para oEmbeds e imágenes insertadas en el contenido
+// (coincide con el max-width de .directory en el diseño original).
+// Buena práctica estándar de temas, sin efecto visual por sí sola.
+if ( ! isset( $content_width ) ) {
+	$content_width = 1400;
+}
+
 /**
  * Registra soportes del tema, menús y tamaños de imagen usados por
  * el directorio (avatares y logos de empresa/institución).

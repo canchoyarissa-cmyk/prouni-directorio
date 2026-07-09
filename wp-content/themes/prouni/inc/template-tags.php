@@ -22,10 +22,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 function prouni_query_miembros( $tipo_slug, $categoria_slug ) {
 	return new WP_Query(
 		array(
-			'post_type'      => 'prouni_miembro',
-			'posts_per_page' => -1,
-			'orderby'        => array( 'menu_order' => 'ASC', 'date' => 'ASC' ),
-			'tax_query'      => array(
+			'post_type'           => 'prouni_miembro',
+			'posts_per_page'      => -1,
+			'orderby'             => array( 'menu_order' => 'ASC', 'date' => 'ASC' ),
+			'no_found_rows'       => true,
+			'ignore_sticky_posts' => true,
+			'tax_query'           => array(
 				'relation' => 'AND',
 				array(
 					'taxonomy' => 'tipo_directorio',
@@ -96,7 +98,7 @@ function prouni_render_company_logo( $post_id, $extra_estilo = '' ) {
 		// company-logo principal (no en la variante compacta con
 		// border-left:0). Se conserva igual.
 		if ( ! $extra_estilo ) {
-			echo '<span>▮</span>';
+			echo '<span aria-hidden="true">▮</span>';
 		}
 		echo esc_html( $sigla );
 	}
@@ -114,13 +116,13 @@ function prouni_render_card_premium_asociado( $post, $categoria ) {
 	$empresa = get_post_meta( $post->ID, '_prouni_empresa', true );
 	$anio    = get_post_meta( $post->ID, '_prouni_anio_ingreso', true );
 	?>
-	<article class="premium-card filter-card" data-category="<?php echo esc_attr( $categoria ); ?>" data-name="<?php echo esc_attr( strtolower( $post->post_title ) ); ?>">
+	<article class="premium-card filter-card" data-category="<?php echo esc_attr( $categoria ); ?>" data-name="<?php echo esc_attr( strtolower( get_the_title( $post ) ) ); ?>">
 		<?php prouni_render_avatar( $post->ID, 'prouni-avatar-lg' ); ?>
 		<div>
 			<h3><?php echo esc_html( get_the_title( $post ) ); ?></h3>
 			<?php if ( $cargo ) : ?><p><?php echo esc_html( $cargo ); ?></p><?php endif; ?>
 			<?php if ( $empresa ) : ?><p><?php echo esc_html( $empresa ); ?></p><?php endif; ?>
-			<p class="small-meta">▣ <?php esc_html_e( 'Ingreso a ProUNI', 'prouni' ); ?></p>
+			<p class="small-meta"><span aria-hidden="true">▣</span> <?php esc_html_e( 'Ingreso a ProUNI', 'prouni' ); ?></p>
 			<?php if ( $anio ) : ?><p class="year"><?php echo esc_html( $anio ); ?></p><?php endif; ?>
 		</div>
 		<?php prouni_render_company_logo( $post->ID ); ?>
@@ -138,14 +140,21 @@ function prouni_render_card_premium_asociado( $post, $categoria ) {
  */
 function prouni_render_card_premium_aliado( $post, $categoria ) {
 	$sector = get_post_meta( $post->ID, '_prouni_cargo', true );
+
+	// Se pasa el contenido por el filtro 'the_content' (resuelve bloques
+	// de Gutenberg y shortcodes a HTML real) antes de reducirlo a texto
+	// plano; usar $post->post_content directo dejaría ver comentarios de
+	// bloque o shortcodes sin procesar si la entrada se edita con el
+	// editor de bloques.
+	$descripcion = wp_strip_all_tags( apply_filters( 'the_content', $post->post_content ) );
 	?>
-	<article class="premium-card filter-card" data-category="<?php echo esc_attr( $categoria ); ?>" data-name="<?php echo esc_attr( strtolower( $post->post_title ) ); ?>">
+	<article class="premium-card filter-card" data-category="<?php echo esc_attr( $categoria ); ?>" data-name="<?php echo esc_attr( strtolower( get_the_title( $post ) ) ); ?>">
 		<?php prouni_render_company_logo( $post->ID, 'border-left:0' ); ?>
 		<div>
 			<h3><?php echo esc_html( get_the_title( $post ) ); ?></h3>
 			<?php if ( $sector ) : ?><p><?php echo esc_html( $sector ); ?></p><?php endif; ?>
-			<?php if ( ! empty( $post->post_content ) ) : ?>
-				<p><?php echo esc_html( wp_strip_all_tags( $post->post_content ) ); ?></p>
+			<?php if ( $descripcion ) : ?>
+				<p><?php echo esc_html( $descripcion ); ?></p>
 			<?php endif; ?>
 		</div>
 		<?php prouni_render_company_logo( $post->ID ); ?>
@@ -164,7 +173,7 @@ function prouni_render_card_member( $post, $categoria ) {
 	$cargo   = get_post_meta( $post->ID, '_prouni_cargo', true );
 	$empresa = get_post_meta( $post->ID, '_prouni_empresa', true );
 	?>
-	<article class="member-card filter-card" data-category="<?php echo esc_attr( $categoria ); ?>" data-name="<?php echo esc_attr( strtolower( $post->post_title ) ); ?>">
+	<article class="member-card filter-card" data-category="<?php echo esc_attr( $categoria ); ?>" data-name="<?php echo esc_attr( strtolower( get_the_title( $post ) ) ); ?>">
 		<?php prouni_render_avatar( $post->ID ); ?>
 		<div>
 			<h3><?php echo esc_html( get_the_title( $post ) ); ?></h3>
@@ -192,7 +201,7 @@ function prouni_render_simple_row( $categoria_slug, $etiqueta, $sufijo = ' ›' 
 	?>
 	<div class="simple-row section-title">
 		<div class="title-left">
-			<div class="icon-line">♙</div>
+			<div class="icon-line" aria-hidden="true">♙</div>
 			<h2><?php echo esc_html( $etiqueta ); ?></h2>
 		</div>
 		<a class="view-all" href="<?php echo esc_url( $link ); ?>"><?php esc_html_e( 'Ver todos', 'prouni' ); ?><?php echo esc_html( $sufijo ); ?></a>
@@ -237,7 +246,7 @@ function prouni_render_seccion_categoria( $tipo_slug, $categoria_slug, $config )
 	?>
 	<div class="section-title">
 		<div class="title-left">
-			<div class="icon-line"><?php echo esc_html( prouni_get_directorio_mapa()[ $tipo_slug ]['icono'] ); ?></div>
+			<div class="icon-line" aria-hidden="true"><?php echo esc_html( prouni_get_directorio_mapa()[ $tipo_slug ]['icono'] ); ?></div>
 			<h2><?php echo esc_html( $config['label'] ); ?></h2>
 			<?php if ( ! empty( $config['destacado'] ) && ! empty( $config['nota'] ) ) : ?>
 				<span class="highlight-note"><?php echo esc_html( $config['nota'] ); ?></span>

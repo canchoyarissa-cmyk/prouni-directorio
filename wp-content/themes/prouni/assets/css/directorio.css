@@ -18,6 +18,22 @@
 }
 
 *{box-sizing:border-box}
+
+/* Utilidad estándar de WordPress: oculta visualmente un texto mientras
+   lo deja disponible para lectores de pantalla. No afecta el diseño. */
+.screen-reader-text{
+  border:0;
+  clip:rect(1px,1px,1px,1px);
+  clip-path:inset(50%);
+  height:1px;
+  width:1px;
+  margin:-1px;
+  overflow:hidden;
+  padding:0;
+  position:absolute !important;
+  word-wrap:normal !important;
+}
+
 body{
   margin:0;
   font-family:'Roboto',sans-serif;

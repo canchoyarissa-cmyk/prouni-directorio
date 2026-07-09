@@ -55,11 +55,18 @@ if ( ! $hero_subtitulo ) {
 </section>
 
 <main class="directory">
-	<div class="switch-tabs">
+	<div class="switch-tabs" role="tablist" aria-label="<?php esc_attr_e( 'Tipo de directorio', 'prouni' ); ?>">
 		<?php $primero = true; ?>
 		<?php foreach ( $mapa as $tipo_slug => $tipo_config ) : ?>
-			<button class="<?php echo $primero ? 'active' : ''; ?>" data-tab="<?php echo esc_attr( $tipo_slug ); ?>">
-				<?php echo esc_html( $tipo_config['icono'] ); ?> &nbsp; <?php echo esc_html( $tipo_config['label'] ); ?>
+			<button
+				class="<?php echo esc_attr( $primero ? 'active' : '' ); ?>"
+				data-tab="<?php echo esc_attr( $tipo_slug ); ?>"
+				role="tab"
+				id="tab-<?php echo esc_attr( $tipo_slug ); ?>"
+				aria-selected="<?php echo esc_attr( $primero ? 'true' : 'false' ); ?>"
+				aria-controls="<?php echo esc_attr( $tipo_slug ); ?>"
+			>
+				<span aria-hidden="true"><?php echo esc_html( $tipo_config['icono'] ); ?></span> &nbsp; <?php echo esc_html( $tipo_config['label'] ); ?>
 			</button>
 			<?php $primero = false; ?>
 		<?php endforeach; ?>
@@ -67,17 +74,26 @@ if ( ! $hero_subtitulo ) {
 
 	<?php $primero = true; ?>
 	<?php foreach ( $mapa as $tipo_slug => $tipo_config ) : ?>
-		<div class="tab-panel <?php echo $primero ? 'active' : ''; ?>" id="<?php echo esc_attr( $tipo_slug ); ?>">
+		<div
+			class="tab-panel <?php echo esc_attr( $primero ? 'active' : '' ); ?>"
+			id="<?php echo esc_attr( $tipo_slug ); ?>"
+			role="tabpanel"
+			aria-labelledby="tab-<?php echo esc_attr( $tipo_slug ); ?>"
+		>
 
 			<div class="controls">
-				<div class="chips">
-					<button class="chip active" data-filter="all"><?php esc_html_e( 'Todos', 'prouni' ); ?></button>
+				<div class="chips" role="group" aria-label="<?php esc_attr_e( 'Filtrar por categoría', 'prouni' ); ?>">
+					<button class="chip active" data-filter="all" aria-pressed="true"><?php esc_html_e( 'Todos', 'prouni' ); ?></button>
 					<?php foreach ( $tipo_config['categorias'] as $cat_slug => $cat_config ) : ?>
-						<button class="chip" data-filter="<?php echo esc_attr( $cat_slug ); ?>"><?php echo esc_html( $cat_config['chip'] ); ?></button>
+						<button class="chip" data-filter="<?php echo esc_attr( $cat_slug ); ?>" aria-pressed="false"><?php echo esc_html( $cat_config['chip'] ); ?></button>
 					<?php endforeach; ?>
 				</div>
 				<div class="search-box">
-					⌕ <input type="text" data-role="name-search" placeholder="<?php echo esc_attr( 'aliados' === $tipo_slug ? __( 'Buscar institución...', 'prouni' ) : __( 'Buscar por nombre...', 'prouni' ) ); ?>" />
+					<span aria-hidden="true">⌕</span>
+					<label class="screen-reader-text" for="directory-search-<?php echo esc_attr( $tipo_slug ); ?>">
+						<?php echo esc_html( 'aliados' === $tipo_slug ? __( 'Buscar institución', 'prouni' ) : __( 'Buscar por nombre', 'prouni' ) ); ?>
+					</label>
+					<input type="text" id="directory-search-<?php echo esc_attr( $tipo_slug ); ?>" data-role="name-search" placeholder="<?php echo esc_attr( 'aliados' === $tipo_slug ? __( 'Buscar institución...', 'prouni' ) : __( 'Buscar por nombre...', 'prouni' ) ); ?>" />
 				</div>
 			</div>
 
