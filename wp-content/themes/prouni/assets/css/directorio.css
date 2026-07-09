@@ -189,7 +189,7 @@ body{
   min-height:235px;
   background:
     linear-gradient(90deg,rgba(95,0,0,.96) 0%,rgba(95,0,0,.86) 45%,rgba(95,0,0,.72) 100%),
-    #5f0000;
+    url('https://images.unsplash.com/photo-1523580846011-d3a5bc25702b?auto=format&fit=crop&w=1800&q=80');
   background-size:cover;
   background-position:center;
   display:flex;

@@ -92,6 +92,12 @@ function prouni_render_company_logo( $post_id, $extra_estilo = '' ) {
 	if ( has_post_thumbnail( $post_id ) ) {
 		echo get_the_post_thumbnail( $post_id, 'prouni-logo', array( 'alt' => get_the_title( $post_id ) ) );
 	} else {
+		// El diseño original antepone un icono "▮" a la sigla en el
+		// company-logo principal (no en la variante compacta con
+		// border-left:0). Se conserva igual.
+		if ( ! $extra_estilo ) {
+			echo '<span>▮</span>';
+		}
 		echo esc_html( $sigla );
 	}
 	echo '</div>';
@@ -171,12 +177,16 @@ function prouni_render_card_member( $post, $categoria ) {
 
 /**
  * Fila simple con enlace "Ver todos" hacia el archivo de la taxonomía,
- * usada cuando una categoría todavía no tiene miembros cargados.
+ * usada cuando una categoría todavía no tiene miembros cargados (o,
+ * en Patrocinadores/Colaboradores, siempre, tal como en el HTML
+ * original).
  *
  * @param string $categoria_slug Slug de la categoría.
  * @param string $etiqueta       Título visible de la sección.
+ * @param string $sufijo         Texto/glifo tras "Ver todos" (el original
+ *                                usa " ›" en unos casos y "⌄" en otros).
  */
-function prouni_render_simple_row( $categoria_slug, $etiqueta ) {
+function prouni_render_simple_row( $categoria_slug, $etiqueta, $sufijo = ' ›' ) {
 	$term = get_term_by( 'slug', $categoria_slug, 'categoria_directorio' );
 	$link = $term && ! is_wp_error( $term ) ? get_term_link( $term ) : '#';
 	?>
@@ -185,7 +195,7 @@ function prouni_render_simple_row( $categoria_slug, $etiqueta ) {
 			<div class="icon-line">♙</div>
 			<h2><?php echo esc_html( $etiqueta ); ?></h2>
 		</div>
-		<a class="view-all" href="<?php echo esc_url( $link ); ?>"><?php esc_html_e( 'Ver todos', 'prouni' ); ?> ›</a>
+		<a class="view-all" href="<?php echo esc_url( $link ); ?>"><?php esc_html_e( 'Ver todos', 'prouni' ); ?><?php echo esc_html( $sufijo ); ?></a>
 	</div>
 	<?php
 }
@@ -196,11 +206,28 @@ function prouni_render_simple_row( $categoria_slug, $etiqueta ) {
  * la cuadrícula estándar, o la fila simple con "Ver todos" cuando aún
  * no hay miembros publicados en esa categoría.
  *
+ * Respeta dos banderas de fidelidad al diseño original:
+ * - 'renderizar_seccion' => false: la categoría solo existe como chip
+ *   de filtro, sin sección/markup propio (ej. Estratégicos, Delegados,
+ *   Amigos en Aliados).
+ * - 'forzar_simple' => true: la sección siempre es la fila estática
+ *   "Ver todos", nunca una cuadrícula, aunque existan miembros
+ *   cargados (ej. Patrocinadores, Colaboradores en Asociados).
+ *
  * @param string $tipo_slug       Slug del tipo (asociados|aliados).
  * @param string $categoria_slug  Slug de la categoría.
  * @param array  $config          Config de prouni_get_directorio_mapa().
  */
 function prouni_render_seccion_categoria( $tipo_slug, $categoria_slug, $config ) {
+	if ( isset( $config['renderizar_seccion'] ) && false === $config['renderizar_seccion'] ) {
+		return;
+	}
+
+	if ( ! empty( $config['forzar_simple'] ) ) {
+		prouni_render_simple_row( $categoria_slug, $config['label'], $config['simple_glyph'] ?? ' ›' );
+		return;
+	}
+
 	$query = prouni_query_miembros( $tipo_slug, $categoria_slug );
 
 	if ( ! $query->have_posts() ) {

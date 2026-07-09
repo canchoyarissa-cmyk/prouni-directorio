@@ -152,14 +152,21 @@ function prouni_get_directorio_mapa() {
 					'destacado' => false,
 				),
 				'patrocinadores' => array(
-					'label'     => __( 'Patrocinadores', 'prouni' ),
-					'chip'      => __( 'Patrocinadores', 'prouni' ),
-					'destacado' => false,
+					'label'         => __( 'Patrocinadores', 'prouni' ),
+					'chip'          => __( 'Patrocinadores', 'prouni' ),
+					'destacado'     => false,
+					// Igual que en el HTML original: esta sección siempre es una
+					// fila estática "Ver todos", nunca una cuadrícula de tarjetas,
+					// incluso si ya existen miembros cargados en esta categoría.
+					'forzar_simple' => true,
+					'simple_glyph'  => '⌄',
 				),
 				'colaboradores'  => array(
-					'label'     => __( 'Colaboradores', 'prouni' ),
-					'chip'      => __( 'Colaboradores', 'prouni' ),
-					'destacado' => false,
+					'label'         => __( 'Colaboradores', 'prouni' ),
+					'chip'          => __( 'Colaboradores', 'prouni' ),
+					'destacado'     => false,
+					'forzar_simple' => true,
+					'simple_glyph'  => '⌄',
 				),
 			),
 		),
@@ -173,20 +180,27 @@ function prouni_get_directorio_mapa() {
 					'destacado' => true,
 					'nota'      => __( '★ Los más destacados', 'prouni' ),
 				),
+				// El HTML original solo define el chip de filtro para estas tres
+				// categorías: no existe ninguna sección/cuadrícula para ellas en
+				// la pestaña Aliados. Se mantiene así (renderizar_seccion=false)
+				// para no añadir estructura que no estaba en el diseño original.
 				'estrategicos'    => array(
-					'label'     => __( 'Aliados Estratégicos', 'prouni' ),
-					'chip'      => __( 'Estratégicos', 'prouni' ),
-					'destacado' => false,
+					'label'             => __( 'Aliados Estratégicos', 'prouni' ),
+					'chip'              => __( 'Estratégicos', 'prouni' ),
+					'destacado'         => false,
+					'renderizar_seccion' => false,
 				),
 				'delegados'       => array(
-					'label'     => __( 'Delegados', 'prouni' ),
-					'chip'      => __( 'Delegados', 'prouni' ),
-					'destacado' => false,
+					'label'             => __( 'Delegados', 'prouni' ),
+					'chip'              => __( 'Delegados', 'prouni' ),
+					'destacado'         => false,
+					'renderizar_seccion' => false,
 				),
 				'amigos'          => array(
-					'label'     => __( 'Amigos', 'prouni' ),
-					'chip'      => __( 'Amigos', 'prouni' ),
-					'destacado' => false,
+					'label'             => __( 'Amigos', 'prouni' ),
+					'chip'              => __( 'Amigos', 'prouni' ),
+					'destacado'         => false,
+					'renderizar_seccion' => false,
 				),
 			),
 		),

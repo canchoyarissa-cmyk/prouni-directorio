@@ -7,8 +7,20 @@
  * <nav class="main-nav">. Este walker reproduce exactamente esa
  * estructura (y por tanto el CSS original no necesita tocarse) a
  * partir de un menú real de WordPress editable en Apariencia > Menús.
- * Cualquier ítem con hijos se comporta como el desplegable
- * "Membresía" del prototipo, no solo ese ítem en particular.
+ *
+ * El "⌄" que aparece junto a "Acerca de", "Actividades" y "Membresía"
+ * en el diseño original es texto literal escrito a mano dentro del
+ * enlace, no un indicador generado por lógica de "tiene hijos" (de
+ * hecho "Acerca de" y "Actividades" no abren ningún desplegable). Por
+ * fidelidad, este walker NO agrega ese glifo automáticamente: solo
+ * imprime el título del ítem tal como se escriba en Apariencia > Menús.
+ * Si el administrador quiere el glifo, lo escribe como parte del
+ * título (ej. "Acerca de⌄"), igual que en el HTML original.
+ *
+ * El envoltorio <div class="dropdown"> + <div class="dropdown-menu">
+ * solo se genera cuando el ítem tiene hijos reales en el menú (ese sí
+ * es un requisito funcional inevitable para que el submenú sea
+ * editable desde WordPress).
  *
  * @package ProUNI
  */
@@ -54,7 +66,6 @@ if ( ! class_exists( 'ProUNI_Walker_Nav_Menu' ) ) {
 
 				$output .= '<a class="' . esc_attr( $link_class ) . '" href="' . esc_url( $item->url ) . '">';
 				$output .= esc_html( $item->title );
-				$output .= $has_children ? '<span aria-hidden="true">⌄</span>' : '';
 				$output .= '</a>';
 			} else {
 				// Ítems dentro de un .dropdown-menu.
@@ -87,19 +98,12 @@ function prouni_fallback_menu() {
 	?>
 	<nav class="main-nav" aria-label="<?php esc_attr_e( 'Menú principal', 'prouni' ); ?>">
 		<a href="#" class="nav-item"><?php esc_html_e( 'Inicio', 'prouni' ); ?></a>
-
-		<div class="dropdown">
-			<a href="#" class="nav-item"><?php esc_html_e( 'Acerca de', 'prouni' ); ?><span aria-hidden="true">⌄</span></a>
-		</div>
-
-		<div class="dropdown">
-			<a href="#" class="nav-item"><?php esc_html_e( 'Actividades', 'prouni' ); ?><span aria-hidden="true">⌄</span></a>
-		</div>
-
+		<a href="#" class="nav-item"><?php esc_html_e( 'Acerca de', 'prouni' ); ?>⌄</a>
+		<a href="#" class="nav-item"><?php esc_html_e( 'Actividades', 'prouni' ); ?>⌄</a>
 		<a href="#" class="nav-item"><?php esc_html_e( 'Publicaciones', 'prouni' ); ?></a>
 
 		<div class="dropdown">
-			<a href="#" class="nav-item active"><?php esc_html_e( 'Membresía', 'prouni' ); ?><span aria-hidden="true">⌄</span></a>
+			<a href="#" class="nav-item active"><?php esc_html_e( 'Membresía', 'prouni' ); ?>⌄</a>
 			<div class="dropdown-menu">
 				<a href="#"><?php esc_html_e( 'Directorio', 'prouni' ); ?></a>
 				<a href="#"><?php esc_html_e( 'Programa de Aliados', 'prouni' ); ?></a>
